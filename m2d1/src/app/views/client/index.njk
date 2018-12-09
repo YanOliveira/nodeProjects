@@ -1,0 +1,11 @@
+{% for client in appointmentsArray %}
+  <li class="provider">
+    <div>
+      <img src="/files/{{ client.avatar }}" />
+      <div class="clients">
+        <strong> {{ client.name }} </strong>
+        <p>Horário agendado: {{client.hour}}</p>
+      </div>
+    </div>
+  </li>
+{% endfor %}

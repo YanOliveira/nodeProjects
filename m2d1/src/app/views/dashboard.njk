@@ -1,0 +1,85 @@
+{% extends "_layouts/default.njk" %}
+
+{% block body %}
+  <div class="content">
+    <strong>Olá, {{ user.name }}</strong>
+    {% if appointments %}
+      <div class="dashNav">
+        <ul>
+          <li id="agendamentos" class="active" >Meus Clientes</li>
+          <li id="agendar">Agendar</li>
+        </ul>
+      </div>
+
+      <div id="divAgendamentos" class="mostrar">
+      <p>Escolha a data para verificar quais clientes estão agendados:</p>
+      {% include "_partials/flash.njk" %}
+      <form action="/app/appointments/new/{{provider.id}}" method="post">
+      <input type="text" class="flatpickr" placeholder="Escolha uma data">
+      <div id="hours">
+
+      </div>
+    </div>
+
+    {% endif %}
+    <div id="divAgendar" class="{% if appointments %}esconder{% endif %}">
+      <p>Inicie um agendamento escolhendo um profissional abaixo:</p>
+      {% include "_partials/flash.njk" %}
+      <ul class="providers">
+      {% for provider in providers %}
+        <li class="provider">
+          <div>
+            <img src="/files/{{ provider.avatar }}" />
+            <strong> {{ provider.name }} </strong>
+          </div>
+          <a href="/app/appointments/new/{{provider.id}}">+</a>
+        </li>
+      {% endfor %}
+      </ul>
+    </div>
+    <a href="/app/logout" class="logout">Sair</a>
+  </div>
+
+
+
+<script type="text/javascript">
+    flatpickr('.flatpickr', {
+      minDate: new Date(),
+      dateFormat: 'd/m/y',
+      onChange: function(date){
+            fetch(`/app/clients/{{user_id}}?date=${date[0].getTime()}`).then(function(response){
+              response.text().then(function(html){
+                document.getElementById('hours').innerHTML = html
+              })
+            })
+        }
+    })
+
+    var agendamentos = document.getElementById('agendamentos');
+    var agendar = document.getElementById('agendar');
+
+    document.getElementById('agendamentos').onclick = function() {
+      agendamentos.classList.add('active');
+      agendar.classList.remove('active');
+
+      document.getElementById('divAgendar').classList.add('esconder');
+      document.getElementById('divAgendar').classList.remove('mostrar');
+
+      document.getElementById('divAgendamentos').classList.add('mostrar');
+      document.getElementById('divAgendamentos').classList.remove('esconder');
+    }
+
+    document.getElementById('agendar').onclick = function() {
+      agendar.classList.add('active');
+      agendamentos.classList.remove('active');
+
+      document.getElementById('divAgendar').classList.add('mostrar');
+      document.getElementById('divAgendar').classList.remove('esconder');
+
+      document.getElementById('divAgendamentos').classList.add('esconder');
+      document.getElementById('divAgendamentos').classList.remove('mostrar');
+    }
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "_layouts/auth.njk" %}
+
+{% block body %}
+  <form action="/signup" method="post" enctype="multipart/form-data">
+    {% include "_partials/flash.njk" %}
+    <label for="avatar">
+      <img src="/images/avatar.svg" alt="avatar">
+    </label>
+    <input type="file" name="avatar" id="avatar">
+    <input type="text" name="name" id="name" placeHolder="Nome Completo">
+    <input type="email" name="email" id="email" placeHolder="Seu email">
+    <input type="password" name="password" id="password" placeHolder="Senha secreta">
+
+    <label for="provider">
+      <input type="checkbox" name="provider" id="provider" value="1">
+      Sou cabeleleiro
+    </label>
+
+    <button type="submit">Criar conta</button>
+    <a href="/">Já possuo conta</a>
+  </form>
+
+
+  <script type="text/javascript">
+    var avatarInput = document.getElementById('avatar')
+    var img = document.querySelector('label[for=avatar] img')
+
+    avatarInput.onchange = function(e){
+      img.classList.add('preview')
+      img.src = URL.createObjectURL(e.target.files[0])
+    }
+
+  </script>
+{% endblock %}
+
+
